@@ -17,7 +17,7 @@ function LandingPage() {
                 </Col>
                 <Col span={12}/>
                 <Col span={4}>
-                    <Button type="text" icon={<i className="fa-solid fa-bars"></i>}></Button>
+                    <Button type="text" icon={<i className="fa-solid fa-bars"></i>}>HERE</Button>
                 </Col>
             </Row> 
         </Content>

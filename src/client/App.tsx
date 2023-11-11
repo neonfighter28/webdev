@@ -1,7 +1,7 @@
 import LandingPage from "./pages/LandingPage";
 import ContentPage from "./pages/ContentPage";
 import '@picocss/pico';
-import "./app.css"
+import "./App.css"
 
 function App() {
   return (
