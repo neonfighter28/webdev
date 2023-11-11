@@ -1,14 +1,3 @@
 # Final Project
 
-## Ideas
-- Map of housing density, public transport availability and avergae income. Hoping to highlight that lower income households have less access to public transport.
--
--
--
--
-
-## Packages
--
--
--
--
+https://docs.google.com/document/d/1GhwGdbDmx8ITaRYC8mJghm5UevZFkjtgvdxQfhXnM-g/edit
