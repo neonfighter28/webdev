@@ -1,0 +1,63 @@
+stages:
+  - lint
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH =~ /^(master|main)$/
+    - if: $FORCE_DEPLOY
+      when: always
+    - when: never
+
+variables:
+  IMAGE_NAME: $ci_registry/$CI_PROJECT_PATH
+
+default:
+  before_script:
+    - IMAGE_NAME=$(echo $IMAGE_NAME | tr '[:upper:]' '[:lower:]')
+
+lint_helm:
+  stage: lint
+  image: matthiasgabathuler/my-runner:ubuntu-20.04
+  script:
+    - >-
+      helm lint ${CI_PROJECT_DIR}/helm
+      --set image.name=${IMAGE_NAME}
+      --set image.tag=${CI_COMMIT_REF_NAME}
+      --set build.job_id=${CI_JOB_ID}
+      --set build.commit=${CI_COMMIT_SHA}
+
+build_webapp:
+  stage: build
+  rules:
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  script:
+    - >-
+      /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${IMAGE_NAME}-webapp:latest"
+
+deploy_app:
+  stage: deploy
+  rules:
+  image:
+    name: alpine/helm:3.11.1
+    entrypoint: [""]
+  script:
+  - >-
+    helm --namespace $k8s_namespace
+    --kube-context $k8s_context
+    upgrade $(echo ${CI_PROJECT_NAME} | tr _ -) ${CI_PROJECT_DIR}/helm
+    --install
+    --history-max 5
+    --set image.host=${ci_registry}
+    --set image.name=${IMAGE_NAME}
+    --set image.tag=latest
+    --set build.job_id=${CI_JOB_ID}
+    --set build.commit=${CI_COMMIT_SHA}
+  - >-
+    echo "webapp URL: http://$(echo ${CI_PROJECT_NAME} | tr _ -).course-fwe-2023.isginf.ch"
