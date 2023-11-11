@@ -1,4 +1,5 @@
 import { Layout, Col, Row, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import "./pages.css";
 
 const {Content} = Layout;
@@ -18,6 +19,9 @@ function LandingPage() {
                 <Col span={12}/>
                 <Col span={4}>
                     <Button type="text" icon={<i className="fa-solid fa-bars"></i>}>HERE</Button>
+                    <Link to="/content">
+                        <Button>CONTENT</Button>
+                    </Link>
                 </Col>
             </Row> 
         </Content>
